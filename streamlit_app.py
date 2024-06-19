@@ -16,10 +16,10 @@ def get_standard_names():
     return standard_names
 
 def zip_outputs():
-    with zipfile.ZipFile('outputs.zip', 'w', zipfile.ZIP_DEFLATED) as zipf:
+    with zipfile.ZipFile('outputs.zip', 'w') as zipf:
         for filename in os.listdir('outputs/'):
             file_path = 'outputs/' + filename
-            zipf.write(file_path)
+            zipf.write(file_path, compress_type=zipfile.ZIP_DEFLATED)
 
 def clear_folder():
     files = os.listdir('outputs/')
@@ -32,7 +32,7 @@ def get_match_data():
     df_data['Filename'] = []
     files = os.listdir('outputs/')
     for file in files:
-        list_name, matching_number, filename = file.split('*')
+        list_name, matching_number, filename = file.split('&')
         if matching_number != '0':
             df_data['Standard'].append(list_name)
             df_data['Matching Number'].append(matching_number)
@@ -129,7 +129,7 @@ class CASMatcher:
         result = result[result.iloc[:, 2].apply(self.find_numeric_hyphen_strings)]
         result_Found = pd.DataFrame(yielded_rows[::-1])
         filename = report.name.split('/')[-1].split('.')[0] + '.xlsx'
-        filepath = 'outputs/' + standard_name.split('_')[-1].split('.')[0] + '*' + str(count) + "*" + filename
+        filepath = 'outputs/' + standard_name.split('_')[-1].split('.')[0] + '&' + str(count) + "&" + filename
         with pd.ExcelWriter(filepath, engine='openpyxl') as writer:
             result.to_excel(writer, sheet_name="Total List", index=False)
             if count:
@@ -176,11 +176,11 @@ def main():
                     matcher.get_result(report, standard_name)
                     progress_bar.progress(1*(i+1)/num, text="Operation in progress. Please wait.")
                 progress_bar.progress(1., text="Operation Finished.")
+                zip_outputs()
             MDSreports = None
         st.divider()
         end_col1, end_col2 = st.columns(2)
         with end_col1:
-            zip_outputs()
             st.subheader("Download the output files:")
             with open('outputs.zip', 'rb') as datazip:
                 st.download_button(
@@ -189,11 +189,9 @@ def main():
                     file_name="outputs.zip",
                     mime="application/octet-stream"
                     )
-            st.caption('Successfully Downloaded.')
         with end_col2:
             st.subheader("Clear the output files:")
             st.button(label='Clear Outputs', on_click=clear_folder)
-            st.caption('Successfully Cleared.')
         st.subheader("List of files with matching CAS number:")
         st.dataframe(
             get_match_data(),
@@ -203,7 +201,7 @@ def main():
         st.caption('Please upload and select standard list for further actions.')
     
     with st.sidebar:
-        st.header('Guideline')
+        st.header('	:books: Guideline')
         st.markdown('**1. Upload standard lists that you want to use for comparison.**')
         st.markdown('**2. Select the standard list for comparison.**')
         st.markdown('**3. Upload the MAS Reports before process.**')
