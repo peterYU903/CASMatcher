@@ -11,18 +11,18 @@ df_data = {
 }
 
 def get_standard_names():
-    standard_names = os.listdir('standards/')
+    standard_names = os.listdir('pages/outputs')
     return standard_names
 
 def zip_outputs():
     os.remove('outputs.zip')
     with zipfile.ZipFile('outputs.zip', 'w') as zipf:
-        for filename in os.listdir('outputs/'):
+        for filename in os.listdir('pages/outputs/'):
             file_path = 'outputs/' + filename
             zipf.write(file_path, compress_type=zipfile.ZIP_DEFLATED)
 
 def clear_folder():
-    files = os.listdir('outputs/')
+    files = os.listdir('pages/outputs/')
     for file in files:
         os.remove(os.path.join('outputs/', file))
 
@@ -30,7 +30,7 @@ def get_match_data():
     df_data['Standard'] = []
     df_data['Matching Number'] = []
     df_data['Filename'] = []
-    files = os.listdir('outputs/')
+    files = os.listdir('pages/outputs/')
     for file in files:
         list_name, matching_number, filename = file.split('&')
         if matching_number != '0':
