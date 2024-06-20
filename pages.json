@@ -2,8 +2,8 @@
     "80ccdd457ce75384ea2557ba0232d75d": {
         "page_script_hash": "80ccdd457ce75384ea2557ba0232d75d",
         "page_name": "Login",
-        "icon": "\ud83d\udd11",
-        "script_path": "/workspaces/CasMatcher/\ud83d\udd11_Login.py"
+        "icon": "",
+        "script_path": "/workspaces/CasMatcher/Login.py"
     },
     "9fe1f9b107133e99efe87544b5f589c8": {
         "page_script_hash": "9fe1f9b107133e99efe87544b5f589c8",
