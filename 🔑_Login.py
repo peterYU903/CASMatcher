@@ -42,7 +42,6 @@ def check_password():
             st.session_state["password_correct"] = False
     if st.session_state.get("password_correct", False):
         return True
-    show_all_pages()
     st.set_page_config(page_title='Login', page_icon='sources/johnson.jpg')
     st.header("Please enter the password to access CASMatcher:")
     st.text_input("Password", type="password", on_change=password_entered, key="password")
@@ -52,7 +51,7 @@ def check_password():
 
 def main():
     if not check_password():
-        # clear_all_but_first_page()
+        clear_all_but_first_page()
         st.stop()
     else:
         show_all_pages()
