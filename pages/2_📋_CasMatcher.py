@@ -11,18 +11,18 @@ df_data = {
 }
 
 def get_standard_names():
-    standard_names = os.listdir('pages/outputs')
+    standard_names = os.listdir('standards/')
     return standard_names
 
 def zip_outputs():
     os.remove('outputs.zip')
     with zipfile.ZipFile('outputs.zip', 'w') as zipf:
-        for filename in os.listdir('pages/outputs/'):
+        for filename in os.listdir('outputs/'):
             file_path = 'outputs/' + filename
             zipf.write(file_path, compress_type=zipfile.ZIP_DEFLATED)
 
 def clear_folder():
-    files = os.listdir('pages/outputs/')
+    files = os.listdir('outputs/')
     for file in files:
         os.remove(os.path.join('outputs/', file))
 
@@ -30,14 +30,16 @@ def get_match_data():
     df_data['Standard'] = []
     df_data['Matching Number'] = []
     df_data['Filename'] = []
-    files = os.listdir('pages/outputs/')
+    files = os.listdir('outputs/')
     for file in files:
         list_name, matching_number, filename = file.split('&')
         if matching_number != '0':
             df_data['Standard'].append(list_name)
             df_data['Matching Number'].append(matching_number)
             df_data['Filename'].append(filename)
-    return pd.DataFrame(df_data)
+    df = pd.DataFrame(df_data)
+    df['Matching Number'] = df['Matching Number'].astype(int)
+    return df
 
 class CASMatcher:
     def __init__(self):
@@ -201,16 +203,6 @@ def main():
         )
     else:
         st.caption('Please upload and select standard list for further actions.')
-
-    # with st.sidebar:
-    #     st.header('	:books: Guideline')
-    #     st.markdown('**1. Upload standard lists that you want to use for comparison.**')
-    #     st.markdown('**2. Select the standard list for comparison.**')
-    #     st.markdown('**3. Upload the MAS Reports before process.**')
-    #     st.caption('*Please wait until all reports are uploaded for next step.')
-    #     st.markdown('**4. Press the "Process" button.**')
-    #     st.caption('*Wait until operation success.')
-    #     st.markdown('**5. Download the output files via "Download ZIP" button.**')     
 
 if __name__ == '__main__':
     main()
