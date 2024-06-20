@@ -4,11 +4,11 @@ import json
 from pathlib import Path
 from streamlit.source_util import _on_pages_changed, get_pages
 
-DEFAULT_PAGE = "./Login.py"
+DEFAULT_PAGE = "🔑_Login.py"
 
 def get_all_pages():
     default_pages = get_pages(DEFAULT_PAGE)
-    pages_path = Path("./pages.json")
+    pages_path = Path("pages.json")
     if pages_path.exists():
         saved_default_pages = json.loads(pages_path.read_text())
     else:
@@ -20,6 +20,7 @@ def clear_all_but_first_page():
     current_pages = get_pages(DEFAULT_PAGE)
     if len(current_pages.keys()) == 1:
         return
+    get_all_pages()
     key, val = list(current_pages.items())[0]
     current_pages.clear()
     current_pages[key] = val
@@ -32,6 +33,16 @@ def show_all_pages():
         if key not in current_pages:
             current_pages[key] = saved_pages[key]
     _on_pages_changed.send()
+
+def hide_page(name: str):
+    current_pages = get_pages(DEFAULT_PAGE)
+    for key, val in current_pages.items():
+        if val["page_name"] == name:
+            del current_pages[key]
+            _on_pages_changed.send()
+            break
+
+clear_all_but_first_page()
 
 def check_password():
     def password_entered():
@@ -55,6 +66,7 @@ def main():
         st.stop()
     else:
         show_all_pages()
+        hide_page(DEFAULT_PAGE.replace(".py", ""))
         st.set_page_config(page_title='Login', page_icon='./sources/johnson.jpg')
         st.logo(image='./sources/johnson.jpg')
         st.header("Welcome to CASMatcher. :smile:", )
