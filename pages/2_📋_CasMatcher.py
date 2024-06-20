@@ -196,11 +196,12 @@ def main():
         with end_col2:
             st.subheader("Clear the output files:")
             st.button(label='Clear Outputs', on_click=clear_folder)
-        st.subheader("List of files with matching CAS number:")
-        st.dataframe(
-            get_match_data(),
-            hide_index=True,
-        )
+        if len(os.listdir('outputs/')):
+            st.subheader("List of files with matching CAS number:")
+            st.dataframe(
+                get_match_data(),
+                hide_index=True,
+            )
     else:
         st.caption('Please upload and select standard list for further actions.')
 
