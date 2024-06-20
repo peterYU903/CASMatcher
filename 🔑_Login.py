@@ -4,11 +4,11 @@ import json
 from pathlib import Path
 from streamlit.source_util import _on_pages_changed, get_pages
 
-DEFAULT_PAGE = "🔑_Login.py"
+DEFAULT_PAGE = "./🔑_Login.py"
 
 def get_all_pages():
     default_pages = get_pages(DEFAULT_PAGE)
-    pages_path = Path("pages.json")
+    pages_path = Path("./pages.json")
     if pages_path.exists():
         saved_default_pages = json.loads(pages_path.read_text())
     else:
@@ -42,7 +42,7 @@ def check_password():
             st.session_state["password_correct"] = False
     if st.session_state.get("password_correct", False):
         return True
-    st.set_page_config(page_title='Login', page_icon='sources\johnson.jpg')
+    st.set_page_config(page_title='Login', page_icon='./sources/johnson.jpg')
     st.header("Please enter the password to access CASMatcher:")
     st.text_input("Password", type="password", on_change=password_entered, key="password")
     if "password_correct" in st.session_state:
@@ -55,8 +55,8 @@ def main():
         st.stop()
     else:
         show_all_pages()
-        st.set_page_config(page_title='Login', page_icon='sources\johnson.jpg')
-        st.logo(image='sources\johnson.jpg')
+        st.set_page_config(page_title='Login', page_icon='./sources/johnson.jpg')
+        st.logo(image='./sources/johnson.jpg')
         st.header("Welcome to CASMatcher. :smile:", )
         
 if __name__ == '__main__':

@@ -11,26 +11,26 @@ df_data = {
 }
 
 def get_standard_names():
-    standard_names = os.listdir('standards\\')
+    standard_names = os.listdir('./standards/')
     return standard_names
 
 def zip_outputs():
-    os.remove('outputs.zip')
-    with zipfile.ZipFile('outputs.zip', 'w') as zipf:
-        for filename in os.listdir('outputs\\'):
-            file_path = 'outputs\\' + filename
+    os.remove('./outputs.zip')
+    with zipfile.ZipFile('./outputs.zip', 'w') as zipf:
+        for filename in os.listdir('./outputs/'):
+            file_path = './outputs/' + filename
             zipf.write(file_path, compress_type=zipfile.ZIP_DEFLATED)
 
 def clear_folder():
-    files = os.listdir('outputs')
+    files = os.listdir('/outputs/')
     for file in files:
-        os.remove(os.path.join('outputs\\', file))
+        os.remove(os.path.join('./outputs/', file))
 
 def get_match_data():
     df_data['Standard'] = []
     df_data['Matching Number'] = []
     df_data['Filename'] = []
-    files = os.listdir('outputs\\')
+    files = os.listdir('./outputs/')
     for file in files:
         list_name, matching_number, filename = file.split('&')
         if matching_number != '0':
@@ -105,12 +105,12 @@ class CASMatcher:
         df['CAS Number'] = df['CAS Number'].str.strip(" ,")
         df['CAS Number'] = df['CAS Number'].str.split(',')
         df = df.explode('CAS Number').reset_index(drop=True)
-        df.to_excel('standards\\' + 'processed_' + standard_list.name.split('\\')[-1], index=False)
+        df.to_excel('./standards/' + 'processed_' + standard_list.name.split('/')[-1], index=False)
         return df
 
     def get_result(self, report, standard_name):
         file_type = report.name.split('.')[-1]
-        compareList = pd.read_excel('standards\\' + standard_name)
+        compareList = pd.read_excel('./standards/' + standard_name)
         if file_type == 'docx':
             data_MDS = self.get_MDSReport_docx(report)
         else:
@@ -130,8 +130,8 @@ class CASMatcher:
                 level = currL
         result = result[result.iloc[:, 2].apply(self.find_numeric_hyphen_strings)]
         result_Found = pd.DataFrame(yielded_rows[::-1])
-        filename = report.name.split('\\')[-1].split('.')[0] + '.xlsx'
-        filepath = 'outputs\\' + standard_name.split('_')[-1].split('.')[0] + '&' + str(count) + "&" + filename
+        filename = report.name.split('/')[-1].split('.')[0] + '.xlsx'
+        filepath = 'outputs/' + standard_name.split('_')[-1].split('.')[0] + '&' + str(count) + "&" + filename
         with pd.ExcelWriter(filepath, engine='openpyxl') as writer:
             result.to_excel(writer, sheet_name="Total List", index=False)
             if count:
@@ -140,8 +140,8 @@ class CASMatcher:
 
 def main():
     matcher = CASMatcher()
-    st.set_page_config(page_title='CASMatcher', page_icon='sources\johnson.jpg')
-    st.logo(image='sources\johnson.jpg')
+    st.set_page_config(page_title='CASMatcher', page_icon='./sources/johnson.jpg')
+    st.logo(image='./sources/johnson.jpg')
     st.title('CASMatcher Application')
     st.header('1. Upload the standard lists for comparison:', divider='rainbow')
     standard_lists = st.file_uploader(
@@ -191,12 +191,12 @@ def main():
                     label='Download ZIP',
                     data=datazip,
                     file_name="outputs.zip",
-                    mime="application\octet-stream"
+                    mime="application/octet-stream"
                     )
         with end_col2:
             st.subheader("Clear the output files:")
             st.button(label='Clear Outputs', on_click=clear_folder)
-        if len(os.listdir('outputs\\')):
+        if len(os.listdir('./outputs/')):
             st.subheader("List of files with matching CAS number:")
             st.dataframe(
                 get_match_data(),
