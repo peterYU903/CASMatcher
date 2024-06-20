@@ -66,7 +66,6 @@ def main():
         st.stop()
     else:
         show_all_pages()
-        hide_page(DEFAULT_PAGE.replace(".py", ""))
         st.set_page_config(page_title='Login', page_icon='./sources/johnson.jpg')
         st.logo(image='./sources/johnson.jpg')
         st.header("Welcome to CASMatcher. :smile:", )

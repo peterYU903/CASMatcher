@@ -15,7 +15,8 @@ def get_standard_names():
     return standard_names
 
 def zip_outputs():
-    os.remove('./outputs.zip')
+    if os.path.exists('./outputs.zip'):
+        os.remove('./outputs.zip')
     with zipfile.ZipFile('./outputs.zip', 'w') as zipf:
         for filename in os.listdir('./outputs/'):
             if filename.split('.')[-1] != 'txt':
@@ -99,6 +100,7 @@ class CASMatcher:
                     df = df[df.iloc[:, 0].apply(self.is_single_digit)]
                     df = df.rename(columns={df.columns[0]: 'Level', df.columns[1]: 'Substance Name', df.columns[2]: 'CAS Number'})
                     dfs.append(df)
+        os.remove(temp_file.name)
         merged_df = pd.concat(dfs, ignore_index=True)
         return merged_df
 

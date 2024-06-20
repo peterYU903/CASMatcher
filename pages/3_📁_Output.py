@@ -9,7 +9,8 @@ df_data = {
 }
 
 def zip_outputs():
-    os.remove('./outputs.zip')
+    if os.path.exists('./outputs.zip'):
+        os.remove('./outputs.zip')
     with zipfile.ZipFile('./outputs.zip', 'w') as zipf:
         for filename in os.listdir('./outputs/'):
             if filename.split('.')[-1] != 'txt':
