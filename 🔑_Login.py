@@ -52,12 +52,11 @@ def check_password():
 
 def main():
     if not check_password():
-        clear_all_but_first_page()
+        # clear_all_but_first_page()
         st.stop()
     else:
         show_all_pages()
         st.set_page_config(page_title='Login', page_icon='sources/johnson.jpg')
         st.logo(image='sources/johnson.jpg')
         st.header("Welcome to CASMatcher. :smile:", )
-
 main()
