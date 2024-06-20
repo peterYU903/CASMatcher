@@ -12,10 +12,10 @@ df_data = {
 
 def get_standard_names():
     standard_names = os.listdir('standards/')
-
     return standard_names
 
 def zip_outputs():
+    os.remove('outputs.zip')
     with zipfile.ZipFile('outputs.zip', 'w') as zipf:
         for filename in os.listdir('outputs/'):
             file_path = 'outputs/' + filename
@@ -138,7 +138,8 @@ class CASMatcher:
 
 def main():
     matcher = CASMatcher()
-    st.set_page_config(page_title='CASMatcher', page_icon='https://www.johnsonelectric.com/pub/media/favicon/stores/1/johnson.jpg')
+    st.set_page_config(page_title='CASMatcher', page_icon='sources/johnson.jpg')
+    st.logo(image='sources/johnson.jpg')
     st.title('CASMatcher Application')
     st.header('1. Upload the standard lists for comparison:', divider='rainbow')
     standard_lists = st.file_uploader(
@@ -176,12 +177,13 @@ def main():
                     matcher.get_result(report, standard_name)
                     progress_bar.progress(1*(i+1)/num, text="Operation in progress. Please wait.")
                 progress_bar.progress(1., text="Operation Finished.")
-                zip_outputs()
+                
             MDSreports = None
         st.divider()
         end_col1, end_col2 = st.columns(2)
         with end_col1:
             st.subheader("Download the output files:")
+            zip_outputs()
             with open('outputs.zip', 'rb') as datazip:
                 st.download_button(
                     label='Download ZIP',
@@ -199,16 +201,16 @@ def main():
         )
     else:
         st.caption('Please upload and select standard list for further actions.')
-    
-    with st.sidebar:
-        st.header('	:books: Guideline')
-        st.markdown('**1. Upload standard lists that you want to use for comparison.**')
-        st.markdown('**2. Select the standard list for comparison.**')
-        st.markdown('**3. Upload the MAS Reports before process.**')
-        st.caption('*Please wait until all reports are uploaded for next step.')
-        st.markdown('**4. Press the "Process" button.**')
-        st.caption('*Wait until operation success.')
-        st.markdown('**5. Download the output files via "Download ZIP" button.**')
+
+    # with st.sidebar:
+    #     st.header('	:books: Guideline')
+    #     st.markdown('**1. Upload standard lists that you want to use for comparison.**')
+    #     st.markdown('**2. Select the standard list for comparison.**')
+    #     st.markdown('**3. Upload the MAS Reports before process.**')
+    #     st.caption('*Please wait until all reports are uploaded for next step.')
+    #     st.markdown('**4. Press the "Process" button.**')
+    #     st.caption('*Wait until operation success.')
+    #     st.markdown('**5. Download the output files via "Download ZIP" button.**')     
 
 if __name__ == '__main__':
     main()
