@@ -59,6 +59,5 @@ def main():
         st.set_page_config(page_title='Login', page_icon='sources/johnson.jpg')
         st.logo(image='sources/johnson.jpg')
         st.header("Welcome to CASMatcher. :smile:", )
-        
-if __name__ == "__main__":
-    main()
+
+main()
