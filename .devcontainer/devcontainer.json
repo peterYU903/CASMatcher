@@ -6,9 +6,9 @@
     "codespaces": {
       "openFiles": [
         "./Login.py",
-        "./pages/1_📚_Guideline.py",
-        "./pages/2_📋_CasMatcher.py",
-        "./pages/3_📁_Output.py"
+        "./pages/1_Guideline.py",
+        "./pages/2_CasMatcher.py",
+        "./pages/3_Output.py"
       ]
     },
     "vscode": {
