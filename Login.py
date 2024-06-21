@@ -1,6 +1,6 @@
 import streamlit as st
 import hmac
-from st_pages import Page, show_pages, Section
+from st_pages import Page, show_pages
 
 def check_password():
     def password_entered():
@@ -25,10 +25,9 @@ def main():
         show_pages(
             [
                 Page("Login.py", "Login", "🔑"),
-                Section("Get Started", "🚀"),
-                Page("pages/1_Guideline.py", "Guideline", "📚", is_section=True),
-                Page("pages/2_CasMatcher.py", "CasMatcher", "📋", is_section=True),
-                Page("pages/3_Output.py", "Outputs", "📁", is_section=True)
+                Page("pages/1_Guideline.py", "Guideline", "📚"),
+                Page("pages/2_CasMatcher.py", "CasMatcher", "📋"),
+                Page("pages/3_Output.py", "Outputs", "📁")
             ]
         )
         st.logo(image='./sources/johnson.jpg')
