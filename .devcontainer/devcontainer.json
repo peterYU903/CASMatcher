@@ -5,10 +5,10 @@
   "customizations": {
     "codespaces": {
       "openFiles": [
-        "./Login.py",
-        "./pages/1_Guideline.py",
-        "./pages/2_CasMatcher.py",
-        "./pages/3_Output.py"
+        "Login.py",
+        "pages/1_Guideline.py",
+        "pages/2_CasMatcher.py",
+        "pages/3_Output.py"
       ]
     },
     "vscode": {
@@ -21,7 +21,7 @@
   },
   "updateContentCommand": "[ -f packages.txt ] && sudo apt update && sudo apt upgrade -y && sudo xargs apt install -y <packages.txt; [ -f requirements.txt ] && pip3 install --user -r requirements.txt; pip3 install --user streamlit; echo '✅ Packages installed and Requirements met'",
   "postAttachCommand": {
-    "server": "streamlit run ./Login.py --server.enableCORS false --server.enableXsrfProtection false"
+    "server": "streamlit run Login.py --server.enableCORS false --server.enableXsrfProtection false"
   },
   "portsAttributes": {
     "8501": {

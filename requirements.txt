@@ -4,3 +4,4 @@ numpy
 pymupdf
 openpyxl
 python-docx
+st-pages
