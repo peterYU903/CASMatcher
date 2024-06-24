@@ -4,12 +4,6 @@ import numpy as np
 import zipfile, pymupdf, re, os, tempfile
 from docx import Document
 
-df_data = {
-    "Standard": [],
-    "Matching Number": [],
-    "Filename": [],
-}
-
 def get_standard_names():
     standard_names = os.listdir('./standards/')
     return standard_names
@@ -23,43 +17,21 @@ def zip_outputs():
                 file_path = './outputs/' + filename
                 zipf.write(file_path, compress_type=zipfile.ZIP_DEFLATED)
 
-def clear_folder():
-    files = os.listdir('./outputs/')
-    for file in files:
-        if file.split('.')[-1] != 'txt':
-            os.remove(os.path.join('./outputs/', file))
-
-def get_match_data():
-    df_data['Standard'] = []
-    df_data['Matching Number'] = []
-    df_data['Filename'] = []
-    files = os.listdir('./outputs/')
-    for file in files:
-        if file.split('.')[-1] != 'txt':
-            list_name, matching_number, filename = file.split('&')
-            if matching_number != '0':
-                df_data['Standard'].append(list_name)
-                df_data['Matching Number'].append(matching_number)
-                df_data['Filename'].append(filename)
-    df = pd.DataFrame(df_data)
-    df['Matching Number'] = df['Matching Number'].astype(int)
-    return df
-
 class CASMatcher:
     def __init__(self):
         return
 
-    def is_single_digit(self, string):
+    def is_single_digit(self, string: str) -> bool:
         return len(string) == 1 and string.isdigit()
 
-    def find_numeric_hyphen_strings(self, string):
+    def find_numeric_hyphen_strings(self, string: str) -> bool:
         pattern_1 = r'^\d+-\d+$'
         pattern_2 = r'^\d+-\d+-\d+$'
         if re.match(pattern_1, string) or re.match(pattern_2, string):
             return True
         return False
 
-    def fit_excel(self, writer):
+    def fit_excel(self, writer: pd.ExcelWriter):
         for sheet_name in writer.sheets:
             worksheet = writer.sheets[sheet_name]
             for col in worksheet.columns:
@@ -113,7 +85,7 @@ class CASMatcher:
         df.to_excel('./standards/' + 'processed_' + standard_list.name.split('/')[-1], index=False)
         return df
 
-    def get_result(self, report, standard_name):
+    def get_result(self, report, standard_name: str):
         file_type = report.name.split('.')[-1]
         compareList = pd.read_excel('./standards/' + standard_name)
         if file_type == 'docx':
@@ -145,9 +117,7 @@ class CASMatcher:
 
 def main():
     matcher = CASMatcher()
-    st.set_page_config(page_title='CASMatcher', page_icon='./sources/johnson.jpg')
-    st.logo(image='./sources/johnson.jpg')
-    st.title('CASMatcher Application')
+    st.title(' 📋 CASMatcher Application')
     st.header('1. Upload the standard lists for comparison:', divider='rainbow')
     standard_lists = st.file_uploader(
         label='Upload Standard Lists',
@@ -177,38 +147,19 @@ def main():
         progress_bar = st.progress(0, text="")
         if process and MDSreports is not None:
             if len(MDSreports) == 0:
-                st.text("No reports are uploaded.")
+                st.warning(" ❌ No reports are uploaded.")
             else:
-                num = len(MDSreports)
-                for i, report in enumerate(MDSreports):
-                    matcher.get_result(report, standard_name)
-                    progress_bar.progress(1*(i+1)/num, text="Operation in progress. Please wait.")
-                progress_bar.progress(1., text="Operation Finished.")
-                
+                progress_bar.progress(0)
+                with st.spinner("Operation in progress. Please wait..."):
+                    for i, report in enumerate(MDSreports):
+                        matcher.get_result(report, standard_name)
+                        progress_bar.progress((i + 1) / len(MDSreports))
+                st.success(" ✅ Operation Finished. Get the outputs in \"Outputs\" page.")
             MDSreports = None
-        st.divider()
-        end_col1, end_col2 = st.columns(2)
-        with end_col1:
-            st.subheader("Download the output files:")
-            zip_outputs()
-            with open('outputs.zip', 'rb') as datazip:
-                st.download_button(
-                    label='Download ZIP',
-                    data=datazip,
-                    file_name="outputs.zip",
-                    mime="application/octet-stream"
-                    )
-        with end_col2:
-            st.subheader("Clear the output files:")
-            st.button(label='Clear Outputs', on_click=clear_folder)
-        if len(os.listdir('./outputs/')):
-            st.subheader("List of files with matching CAS number:")
-            st.dataframe(
-                get_match_data(),
-                hide_index=True,
-            )
     else:
-        st.caption('Please upload and select standard list for further actions.')
+        st.caption(' ❗ Please upload and select standard list for further actions.')
 
 if __name__ == '__main__':
+    st.set_page_config(page_title='CASMatcher', page_icon='./sources/johnson.jpg')
+    st.logo(image='./sources/johnson.jpg')
     main()
