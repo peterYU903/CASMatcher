@@ -17,6 +17,10 @@ def zip_outputs():
                 file_path = './outputs/' + filename
                 zipf.write(file_path, compress_type=zipfile.ZIP_DEFLATED)
 
+def auto_download():
+    with open("AutoDownload.py") as file:
+        exec(file.read())
+
 class CASMatcher:
     def __init__(self):
         return
@@ -135,6 +139,12 @@ def main():
         options=standard_names,
         )
     if standard_name is not None:
+        st.header("Temp")
+        _, _, mid_col3, _, _ = st.columns(5)
+        with mid_col3:
+            AutoDownload = st.button("AutoDownload")
+        if AutoDownload:
+            auto_download()
         st.header('3. Upload the MAS reports:', divider='rainbow')
         MDSreports = st.file_uploader(
             label='Upload MAS Reports',
